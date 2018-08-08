@@ -1,0 +1,23 @@
+{
+  "name": "amazon_nodejs_mysql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/discopat1/amazon_nodejs_mysql.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/discopat1/amazon_nodejs_mysql/issues"
+  },
+  "homepage": "https://github.com/discopat1/amazon_nodejs_mysql#readme",
+  "dependencies": {
+    "inquirer": "^6.0.0",
+    "mysql": "^2.16.0"
+  }
+}
