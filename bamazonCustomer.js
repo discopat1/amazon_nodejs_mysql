@@ -47,7 +47,8 @@ function chooseItem() {
             choices: function() {
                 var choiceArray = [];
                 for (var i = 0; i < res.length; i++) {
-                  choiceArray.push(res[i].product_name);
+                    var newString = `id: ${res[i].id} - ${res[i].product_name}`;
+                  choiceArray.push(newString);
                 }
                 
                 //console.log("result: ", choiceArray);
@@ -74,8 +75,10 @@ function chooseItem() {
                 
                 console.log("product name: ", res[i].product_name);
                 console.log("Userchoice: ", res[i].stock_quantity);
-
+               
             }
+        
+
         console.log("Item: ", answer.item)
         itemQuantity = answer.Quantity;
         console.log("Quantity: ", itemQuantity);
