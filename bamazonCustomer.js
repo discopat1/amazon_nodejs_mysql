@@ -69,10 +69,7 @@ function chooseItem() {
     // take this answer and read from the db then ask the next question
         .then(function(answer) {
             
-            // console.log("Current inventory: ", res[2].stock_quantity)
-
         console.log("Item: ", answer.item)
-        
         console.log("Quantity: ", answer.Quantity);
 
         var chosenItem;
@@ -81,11 +78,12 @@ function chooseItem() {
             chosenItem = res[i];
           }
         }
-        console.log("Chosen Item: ", chosenItem);
-        console.log("Chosen Inventory: ", chosenItem.stock_quantity);
+
+        // console.log("Chosen Item: ", chosenItem);
+        // console.log("Chosen Inventory: ", chosenItem.stock_quantity);
         var newQuantity = (chosenItem.stock_quantity -= answer.Quantity);
-        console.log("New Inventory: " , newQuantity);
-        
+        // console.log("New Inventory: " , newQuantity);
+        var itemPrice = (chosenItem.price * answer.Quantity);
         if (chosenItem.stock_quantity < answer.Quantity) {
             console.log("Not enough inventory to supply this demand. Please order less.");
         }
@@ -103,7 +101,7 @@ function chooseItem() {
                 ],
                 function(err) {
                     if (err) throw err;
-                    console.log("Your total cost is: ")
+                    console.log("Your total cost is: ", itemPrice)
                 }
             )
         }
