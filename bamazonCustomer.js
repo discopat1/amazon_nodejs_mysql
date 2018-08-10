@@ -2,19 +2,6 @@ var mysql = require("mysql");
 var inquirer = require("inquirer");
 var Table = require('cli-table');
 
-// instantiate
-var table = new Table({
-    head: ['TH 1 label', 'TH 2 label']
-  , colWidths: [100, 200]
-});
- 
-// table is an Array, so you can `push`, `unshift`, `splice` and friends
-table.push(
-    ['First value', 'Second value']
-  , ['First value', 'Second value']
-);
- 
-console.log(table.toString());
 
 // create the connection information for the sql database
 var connection = mysql.createConnection({
@@ -44,7 +31,22 @@ function readProducts() {
     connection.query("SELECT * FROM products", function(err, res) {
       if (err) throw err;
       // Log all results of the SELECT statement
-      console.log(res);
+        // Table start--------------------------
+        // =====================================
+        var table = new Table({
+            head: ['Product', 'Department', 'Price', 'Inventory']
+          , colWidths: [40, 40, 20, 20]
+        });
+         
+        // table is an Array, so you can `push`, `unshift`, `splice` and friends
+         for (var i = 0; i < res.length; i++) {
+        table.push(
+            [res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
+        )}
+                  
+        console.log(table.toString());
+        // ===================================
+        // Table end--------------------------
       chooseItem();
     });
   }
@@ -61,7 +63,6 @@ function chooseItem() {
             choices: function() {
                 var choiceArray = [];
                 for (var i = 0; i < res.length; i++) {
-                    // var newString = `id: ${res[i].id} - ${res[i].product_name}`;
                   choiceArray.push(res[i].product_name);
                 }
                 return choiceArray;
@@ -92,9 +93,6 @@ function chooseItem() {
             chosenItem = res[i];
           }
         }
-
-        // console.log("Chosen Item: ", chosenItem);
-        // console.log("Chosen Inventory: ", chosenItem.stock_quantity);
         var newQuantity = (chosenItem.stock_quantity -= answer.Quantity);
         // console.log("New Inventory: " , newQuantity);
         var itemPrice = (chosenItem.price * answer.Quantity);
@@ -120,27 +118,6 @@ function chooseItem() {
             )
         }
 
-        // Table start--------------------------
-        // =====================================
-        var table = new Table({
-            head: ['Product', 'Department', 'Price', 'Inventory']
-          , colWidths: [25, 25, 25, 25]
-        });
-         
-        // table is an Array, so you can `push`, `unshift`, `splice` and friends
-         for (var i = 0; i < res.length; i++) {
-        table.push(
-            [res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
-        )}
-                  
-        console.log(table.toString());
-        // ===================================
-        // Table end--------------------------
-        
-        
-        
-        
-    
         connection.end();
     });
 });
