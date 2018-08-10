@@ -1,6 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-var itemQuantity;
+
 
 // create the connection information for the sql database
 var connection = mysql.createConnection({
@@ -47,11 +47,9 @@ function chooseItem() {
             choices: function() {
                 var choiceArray = [];
                 for (var i = 0; i < res.length; i++) {
-                    var newString = `id: ${res[i].id} - ${res[i].product_name}`;
-                  choiceArray.push(newString);
+                    // var newString = `id: ${res[i].id} - ${res[i].product_name}`;
+                  choiceArray.push(res[i].product_name);
                 }
-                
-                //console.log("result: ", choiceArray);
                 return choiceArray;
               },
             message: "Choose the item you would like to buy"
@@ -71,24 +69,53 @@ function chooseItem() {
     // take this answer and read from the db then ask the next question
         .then(function(answer) {
             
-            for (var i = 0; i < res.length; i++) {
-                
-                console.log("product name: ", res[i].product_name);
-                console.log("Userchoice: ", res[i].stock_quantity);
-               
-            }
-        
+            // console.log("Current inventory: ", res[2].stock_quantity)
 
         console.log("Item: ", answer.item)
-        itemQuantity = answer.Quantity;
-        console.log("Quantity: ", itemQuantity);
         
-        checkQuantity();
+        console.log("Quantity: ", answer.Quantity);
+
+        var chosenItem;
+        for (var i = 0; i < res.length; i++) {
+          if (res[i].product_name === answer.item) {
+            chosenItem = res[i];
+          }
+        }
+        console.log("Chosen Item: ", chosenItem);
+        console.log("Chosen Inventory: ", chosenItem.stock_quantity);
+        var newQuantity = (chosenItem.stock_quantity -= answer.Quantity);
+        console.log("New Inventory: " , newQuantity);
+        
+        if (chosenItem.stock_quantity < answer.Quantity) {
+            console.log("Not enough inventory to supply this demand. Please order less.");
+        }
+        else {
+            // Update database to subtact inventory based on the amount bought
+            connection.query(
+                "UPDATE products SET ? WHERE ?",
+                [
+                    {
+                        stock_quantity: newQuantity
+                    },
+                    {
+                        id: chosenItem.id
+                    }
+                ],
+                function(err) {
+                    if (err) throw err;
+                    console.log("Your total cost is: ")
+                }
+            )
+        }
+
+
+        
+        
+        
+        
+    
+        connection.end();
     });
 });
 }
 
-function checkQuantity() {
-    // if (itemQuantity <= )
-    connection.end();
-}
